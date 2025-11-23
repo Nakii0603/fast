@@ -3,20 +3,20 @@
 import { useState, useEffect, useRef } from 'react';
 
 export default function RSVPReader() {
-  const [text, setText] = useState('');
-  const [words, setWords] = useState([]);
-  const [playing, setPlaying] = useState(false);
-  const [index, setIndex] = useState(0);
-  const [wpm, setWpm] = useState(300);
-  const [showWpmDropdown, setShowWpmDropdown] = useState(false);
-  const intervalRef = useRef(null);
-  const dropdownRef = useRef(null);
-  const wpmOptions = [100, 200, 300, 400, 500, 600, 700];
+  const [text, setText] = useState<string>('');
+  const [words, setWords] = useState<string[]>([]);
+  const [playing, setPlaying] = useState<boolean>(false);
+  const [index, setIndex] = useState<number>(0);
+  const [wpm, setWpm] = useState<number>(300);
+  const [showWpmDropdown, setShowWpmDropdown] = useState<boolean>(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const wpmOptions: number[] = [100, 200, 300, 400, 500, 600, 700];
 
   // Close dropdown when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setShowWpmDropdown(false);
       }
     };
@@ -31,10 +31,10 @@ export default function RSVPReader() {
   }, [showWpmDropdown]);
 
   // Calculate interval in milliseconds based on WPM
-  const getInterval = () => (60 / wpm) * 1000;
+  const getInterval = (): number => (60 / wpm) * 1000;
 
   // Start reading
-  const handleStart = () => {
+  const handleStart = (): void => {
     if (!text.trim()) return;
     
     const wordArray = text.trim().split(/\s+/).filter(word => word.length > 0);
@@ -44,7 +44,7 @@ export default function RSVPReader() {
   };
 
   // Stop reading
-  const handleStop = () => {
+  const handleStop = (): void => {
     setPlaying(false);
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
@@ -53,7 +53,7 @@ export default function RSVPReader() {
   };
 
   // Reset to beginning
-  const handleReset = () => {
+  const handleReset = (): void => {
     handleStop();
     setIndex(0);
   };
